@@ -17,7 +17,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('linkedTemplateUri')]",
+                    "uri": "[variables('collectorTemplateUri')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
