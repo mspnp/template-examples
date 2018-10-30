@@ -28,6 +28,7 @@
             }
         ]
     },
+    "resources": [],
     "outputs": {
         "collection": {
             "type": "array",
