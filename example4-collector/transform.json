@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "source": {
+            "type": "object"
+        },
+        "state": {
+            "type": "array",
+            "defaultValue": []
+        }
+    },
+    "variables": {
+        "instance": [
+            {
+                "name": "[parameters('source').name]",
+                "properties": {
+                    "description": "[parameters('source').description]",
+                    "protocol": "[parameters('source').protocol]",
+                    "sourcePortRange": "[parameters('source').sourcePortRange]",
+                    "destinationPortRange": "[parameters('source').destinationPortRange]",
+                    "sourceAddressPrefix": "[parameters('source').sourceAddressPrefix]",
+                    "destinationAddressPrefix": "[parameters('source').destinationAddressPrefix]",
+                    "access": "[parameters('source').access]",
+                    "priority": "[parameters('source').priority]",
+                    "direction": "[parameters('source').direction]"
+                }
+            }
+        ]
+    },
+    "outputs": {
+        "collection": {
+            "type": "array",
+            "value": "[concat(parameters('state'), variables('instance'))]"
+        }
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkSecurityGroupsSettings": {
+            "type": "object"
+        }
+    },
+    "variables": {
+        "collectorTemplateUri": "[uri(deployment().properties.templateLink.uri, 'collector.template.json')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2015-01-01",
+            "name": "collector",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('linkedTemplateUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "source": {
+                        "value": "[parameters('networkSecurityGroupsSettings').securityRules]"
+                    },
+                    "transformTemplateUri": {
+                        "value": "[uri(deployment().properties.templateLink.uri, 'transform.json')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "networkSecurityGroup1",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": "[reference('firstResource').outputs.result.value]"
+            }
+        }
+    ],
+    "outputs": {
+        "instance": {
+            "type": "array",
+            "value": "[reference('firstResource').outputs.result.value]"
+        }
+    }
+}
