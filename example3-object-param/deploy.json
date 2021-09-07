@@ -1,13 +1,17 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VNetSettings":{"type":"object"},
-        "networkSecurityGroupsSettings": {"type":"object"}
+        "VNetSettings": {
+            "type": "object"
+        },
+        "networkSecurityGroupsSettings": {
+            "type": "object"
+        }
     },
     "resources": [
         {
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2020-05-01",
             "type": "Microsoft.Network/virtualNetworks",
             "name": "[parameters('VNetSettings').name]",
             "location": "[resourceGroup().location]",
@@ -34,73 +38,55 @@
             }
         },
         {
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2020-05-01",
             "type": "Microsoft.Network/networkSecurityGroups",
             "name": "NSG1",
-            "location":"[resourceGroup().location]",
+            "location": "[resourceGroup().location]",
             "properties": {
-                "securityRules":[]
+                "securityRules": []
             }
-          },
-          {
-              "apiVersion": "2015-01-01",
-              "type": "Microsoft.Resources/deployments",
-              "name": "loop-0",
-              "dependsOn": [
-                  "NSG1"
-              ],
-              "properties": {
-                  "mode":"Incremental",
-                  "parameters":{},
-                  "template": {
-                      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                      "contentVersion": "1.0.0.0",
-                      "parameters": {},
-                      "variables": {},
-                      "resources": [],
-                      "outputs": {}
-                  }
-              }       
-          },
-          {
-              "apiVersion": "2015-01-01",
-              "type": "Microsoft.Resources/deployments",
-              "name": "[concat('loop-', copyIndex(1))]",
-              "dependsOn": [
-                "[concat('loop-', copyIndex())]"
-              ],
-              "copy": {
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "type": "Microsoft.Resources/deployments",
+            "name": "[concat('loop-', copyIndex(1))]",
+            "dependsOn": [
+                "NSG1"
+            ],
+            "copy": {
                 "name": "iterator",
-                "count": "[length(parameters('networkSecurityGroupsSettings').securityRules)]"
-              },
-              "properties": {
+                "count": "[length(parameters('networkSecurityGroupsSettings').securityRules)]",
+                "mode": "serial"
+            },
+            "properties": {
                 "mode": "Incremental",
                 "template": {
-                  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                  "contentVersion": "1.0.0.0",
-                 "parameters": {},
-                  "variables": {},
-                  "resources": [
-                      {
-                          "name": "[concat('NSG1/' , parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].name)]",
-                          "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-                          "apiVersion": "2016-09-01",
-                          "location":"[resourceGroup().location]",
-                          "properties":{
-                              "description": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].description]",
-                              "priority":"[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].priority]",
-                              "protocol":"[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].protocol]",
-                              "sourcePortRange": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].sourcePortRange]",
-                              "destinationPortRange": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].destinationPortRange]",
-                              "sourceAddressPrefix": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].sourceAddressPrefix]",
-                              "destinationAddressPrefix": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].destinationAddressPrefix]",
-                              "access":"[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].access]",
-                              "direction":"[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].direction]"
-                              }
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "name": "[concat('NSG1/' , parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].name)]",
+                            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                            "apiVersion": "2016-09-01",
+                            "location": "[resourceGroup().location]",
+                            "properties": {
+                                "description": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].description]",
+                                "priority": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].priority]",
+                                "protocol": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].protocol]",
+                                "sourcePortRange": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].sourcePortRange]",
+                                "destinationPortRange": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].destinationPortRange]",
+                                "sourceAddressPrefix": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].sourceAddressPrefix]",
+                                "destinationAddressPrefix": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].destinationAddressPrefix]",
+                                "access": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].access]",
+                                "direction": "[parameters('networkSecurityGroupsSettings').securityRules[copyIndex()].direction]"
+                            }
                         }
-                  ],
-                  "outputs": {}
+                    ],
+                    "outputs": {}
                 }
-              }
-          }    ]
+            }
+        }
+    ]
 }

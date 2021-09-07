@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "networkSecurityGroupsSettings": {
@@ -11,7 +11,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2015-01-01",
+            "apiVersion": "2020-06-01",
             "name": "collector",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -31,7 +31,7 @@
             }
         },
         {
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2020-05-01",
             "type": "Microsoft.Network/networkSecurityGroups",
             "name": "networkSecurityGroup1",
             "location": "[resourceGroup().location]",
