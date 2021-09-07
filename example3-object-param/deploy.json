@@ -56,7 +56,7 @@
             "copy": {
                 "name": "iterator",
                 "count": "[length(parameters('networkSecurityGroupsSettings').securityRules)]",
-                "mode": "serial"
+                "mode": "Serial"
             },
             "properties": {
                 "mode": "Incremental",
